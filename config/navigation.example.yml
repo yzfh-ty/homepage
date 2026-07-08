@@ -1,0 +1,56 @@
+# 分类列表。每个分类会渲染成页面上的一个分组。
+categories:
+  - name: 开发资源
+    # 分类描述会显示在分类标题下方，可以留空。
+    description: 公共开发工具与文档
+    # 分类图标使用 Font Awesome class。
+    icon: fas fa-star
+    sites:
+      # name 是卡片标题，url 是点击跳转地址。
+      - name: GitHub
+        url: https://github.com
+        # description 是卡片副标题。
+        description: 代码托管平台
+        # icon 是手动图标；当 settings.yml 里 icons.mode 为 favicon 时，会先尝试站点图标。
+        icon: fab fa-github
+        # tags 用于本地搜索匹配，可按需添加。
+        tags:
+          - code
+          - git
+      - name: MDN Web Docs
+        url: https://developer.mozilla.org
+        description: Web 技术文档
+        icon: fab fa-firefox-browser
+        tags:
+          - docs
+          - web
+      - name: Stack Overflow
+        url: https://stackoverflow.com
+        description: 开发者问答社区
+        icon: fab fa-stack-overflow
+        tags:
+          - qna
+          - code
+
+  - name: 常用网站
+    description: 公共搜索与信息服务
+    icon: fas fa-globe
+    sites:
+      - name: Wikipedia
+        url: https://www.wikipedia.org
+        description: 自由百科全书
+        icon: fab fa-wikipedia-w
+        tags:
+          - wiki
+      - name: Google
+        url: https://www.google.com
+        description: 搜索引擎
+        icon: fab fa-google
+        tags:
+          - search
+      - name: DuckDuckGo
+        url: https://duckduckgo.com
+        description: 注重隐私的搜索引擎
+        icon: fas fa-search
+        tags:
+          - search

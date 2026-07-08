@@ -1,0 +1,67 @@
+---
+import type { IconMode, SiteItem } from "../lib/config";
+import { getDomain, getFaviconUrls } from "../lib/config";
+
+interface Props {
+  site: SiteItem;
+  category: string;
+  iconMode: IconMode;
+  defaultIcon: string;
+  iconTimeoutMs: number;
+}
+
+const { site, category, iconMode, defaultIcon, iconTimeoutMs } = Astro.props;
+const domain = getDomain(site.url);
+const manualIcon = site.icon;
+const useFavicon = iconMode === "favicon";
+const generatedFavicons = useFavicon ? getFaviconUrls(site.url) : [];
+const firstFavicon = generatedFavicons[0] ?? "";
+const icon = manualIcon || defaultIcon || "fas fa-link";
+const filterText = [site.name, site.description, domain, category, ...site.tags]
+  .join(" ")
+  .toLowerCase();
+---
+
+<a
+  class="site-card"
+  href={site.url}
+  target="_blank"
+  rel="noreferrer"
+  data-site-card
+  data-filter={filterText}
+  data-name={site.name}
+  data-url={site.url}
+  data-icon={icon}
+  data-favicon-url={useFavicon ? firstFavicon : undefined}
+  data-description={site.description}
+  data-tooltip={`${site.name} - ${site.description || site.url}`}
+>
+  <div class="site-card-icon" aria-hidden="true">
+    <div class="icon-container">
+      {
+        useFavicon ? (
+          <>
+            <i class="fas fa-circle-notch fa-spin icon-placeholder" aria-hidden="true"></i>
+            <img
+              class="favicon-icon"
+              src={firstFavicon}
+              alt={`${site.name} favicon`}
+              loading="eager"
+              decoding="async"
+              data-favicon-img
+              data-favicon-srcs={JSON.stringify(generatedFavicons)}
+              data-icon-timeout-ms={iconTimeoutMs}
+            />
+            <i class:list={[icon, "icon-fallback"]} aria-hidden="true"></i>
+          </>
+        ) : (
+          <i class:list={[icon, "manual-icon"]} aria-hidden="true"></i>
+        )
+      }
+    </div>
+  </div>
+  <div class="site-card-content">
+    <h3>{site.name}</h3>
+    <p data-tooltip={site.description || domain}>{site.description || domain}</p>
+  </div>
+</a>

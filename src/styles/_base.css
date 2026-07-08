@@ -1,0 +1,119 @@
+/* ============================================
+   Base Styles & Global Reset
+   ============================================ */
+
+/* 主题切换按钮 - 调整为 iOS 风格 */
+.theme-toggle {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-frosted);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  transition-timing-function: var(--transition-bounce);
+  z-index: 100;
+  box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  background: var(--surface-frosted-hover);
+  box-shadow: 0 6px 20px var(--shadow-color);
+  color: var(--accent-color);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.theme-toggle i {
+  font-size: 18px;
+}
+
+/* 全局样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 全局 Focus Visible 样式 */
+:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* 导航项 Focus 样式 */
+.site-card:focus-visible,
+.theme-toggle:focus-visible,
+.category-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  z-index: 10;
+}
+
+/* 防止滚动条导致的布局偏移 */
+html {
+  overflow-y: hidden;
+  /* 改为hidden，移除强制显示的滚动条 */
+  scrollbar-width: thin;
+  /* Firefox */
+  /* 明确 rem 基准字号：便于用 rem 统一管理字号（1rem = 16px） */
+  font-size: 16px;
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(
+    --font-body,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Noto Sans',
+    'Helvetica Neue',
+    Arial,
+    sans-serif
+  );
+  font-weight: var(--font-weight-body, normal);
+  line-height: 1.6;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: var(--app-height, 100vh);
+  overflow: hidden;
+  /* 防止body滚动 */
+  padding-right: 0 !important;
+  /* 防止滚动条导致的布局偏移 */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* 布局 */
+.layout {
+  display: flex;
+  min-height: var(--app-height, 100vh);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  /* 防止layout滚动 */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 确保加载后立即显示 */
+body.loaded .layout {
+  opacity: 1;
+}

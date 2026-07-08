@@ -1,0 +1,14 @@
+services:
+  nav:
+    container_name: single-page-nav
+    image: ${NAV_IMAGE:-single-page-nav:latest}
+    environment:
+      NAV_NAVIGATION_CONFIG: /app/config/navigation.yml
+      NAV_SETTINGS_CONFIG: /app/config/settings.yml
+      HOST: 0.0.0.0
+      PORT: 4321
+    ports:
+      - "${NAV_PORT:-8080}:4321"
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped

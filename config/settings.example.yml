@@ -1,0 +1,34 @@
+# 站点基础信息。
+site:
+  # 浏览器标题和页面默认标题。
+  title: My Navigation
+  # meta description。
+  description: Personal Navigation Station
+  # 站点所有者，可用于后续扩展展示。
+  owner: Your Name
+  # 可选：light、dark、system。
+  theme: dark
+
+# 首页欢迎区内容。
+profile:
+  title: 自定义首页标题
+  subtitle: 自定义副标题
+
+# 字体配置。
+fonts:
+  # system 只使用访问设备已有字体；css 会加载下面的 cssUrl。
+  source: css
+  cssUrl: https://fontsapi.zeoseven.com/292/main/result.css
+  # true 会预加载字体 CSS，false 则正常加载。
+  preload: false
+  # 需要和字体 CSS 里的 font-family 名称一致。
+  family: LXGW WenKai
+  weight: normal
+
+# 图标配置。
+icons:
+  # manual 使用站点 icon；favicon 会先尝试站点图标，再回退到 icon/defaultIcon。
+  mode: favicon
+  defaultIcon: fas fa-link
+  # 单个图标源的超时时间，单位毫秒。
+  timeoutMs: 2500

@@ -1,0 +1,57 @@
+---
+import type { Category, IconMode } from "../lib/config";
+import SiteCard from "./SiteCard.astro";
+
+interface Props {
+  category: Category;
+  iconMode: IconMode;
+  defaultIcon: string;
+  iconTimeoutMs: number;
+}
+
+const { category, iconMode, defaultIcon, iconTimeoutMs } = Astro.props;
+const categoryId = `category-${category.name.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, "-")}`;
+---
+
+<section
+  class="category category-level-1"
+  id={categoryId}
+  data-category-section
+  data-type="category"
+  data-id={categoryId}
+  data-name={category.name}
+  data-icon={category.icon}
+  data-level="1"
+  data-container="categories"
+>
+  <div class="category-header" data-toggle="category">
+    <h2 data-editable="category-name">
+      <i class={category.icon}></i>
+      {category.name}
+      <span class="toggle-icon">
+        <i class="fas fa-chevron-down"></i>
+      </span>
+    </h2>
+  </div>
+  <div class="category-content">
+    {
+      category.sites.length > 0 ? (
+        <div class="sites-grid" data-container="sites">
+          {
+            category.sites.map((site) => (
+              <SiteCard
+                site={site}
+                category={category.name}
+                iconMode={iconMode}
+                defaultIcon={defaultIcon}
+                iconTimeoutMs={iconTimeoutMs}
+              />
+            ))
+          }
+        </div>
+      ) : (
+        <p class="empty-content">暂无内容</p>
+      )
+    }
+  </div>
+</section>

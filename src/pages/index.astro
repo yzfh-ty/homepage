@@ -1,0 +1,425 @@
+---
+import CategorySection from "../components/CategorySection.astro";
+import { loadNavConfig } from "../lib/config";
+import { getConfiguredFontStyle } from "../lib/fonts";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "../styles/global.css";
+
+const config = loadNavConfig();
+const initialThemeClass = config.site.theme === "light" ? "light-theme" : "";
+const profileTitle = config.profile.title || config.site.title;
+const profileSubtitle = config.profile.subtitle || config.site.description;
+const assetBase = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const shouldLoadCssFont = config.fonts.source === "css" && Boolean(config.fonts.cssUrl);
+const fontStyle = getConfiguredFontStyle(config.fonts);
+---
+
+<!doctype html>
+<html
+  lang="zh-CN"
+  class={initialThemeClass}
+  data-theme-mode={config.site.theme}
+  style={fontStyle}
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={config.site.description} />
+    <link rel="icon" href={`${assetBase}logo.svg`} type="image/svg+xml" />
+    {
+      shouldLoadCssFont && config.fonts.preload && (
+        <>
+          <link rel="preload" href={config.fonts.cssUrl} as="style" />
+          <link rel="stylesheet" href={config.fonts.cssUrl} />
+        </>
+      )
+    }
+    {
+      shouldLoadCssFont && !config.fonts.preload && (
+        <link rel="stylesheet" href={config.fonts.cssUrl} />
+      )
+    }
+    <script is:inline>
+      (() => {
+        const mode = document.documentElement.dataset.themeMode || "dark";
+        const saved = localStorage.getItem("nav-theme");
+        const theme = saved === "light" || saved === "dark" || saved === "system" ? saved : mode;
+        const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        if (theme === "light" || (theme === "system" && prefersLight)) {
+          document.documentElement.classList.add("light-theme");
+        }
+        document.documentElement.dataset.themeMode = theme;
+      })();
+    </script>
+    <title>{config.site.title}</title>
+  </head>
+  <body class="loaded">
+    <div class="layout">
+      <main class="content" id="top">
+        <section class="search-container" aria-label="搜索">
+          <div class="search-box" data-search-box>
+            <button
+              class="search-engine-button search-engine-toggle"
+              type="button"
+              title="本地搜索"
+              aria-label="本地搜索"
+            >
+              <i class="search-engine-icon search-engine-icon-svg" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false">
+                  <g fill="#2877fb" fill-rule="nonzero">
+                    <g transform="scale(5.12,5.12)">
+                      <path
+                        d="M45,26.10156v-5.10156c0,-0.89844 -0.60156,-1.69922 -1.39844,-1.89844l-4.60156,-1.40234c-5.30078,-1.59766 -10.30078,-3 -15.60156,-4.69922h-0.09766c-0.80078,-0.19922 -1.60156,0.69922 -1.19922,1.5c1.89844,3.89844 3.89844,9.5 3.89844,9.5l6.69922,2.60156c-0.30078,0 -21.69922,11.39844 -21.69922,11.39844l9,-8v-23c0,-0.89844 -0.60156,-1.80078 -1.39844,-2c0,0 -4.90234,-1.89844 -8,-2.89844c-0.20312,-0.10156 -0.40234,-0.10156 -0.60156,-0.10156c-0.39844,0 -0.80078,0.10156 -1.19922,0.39844c-0.5,0.40234 -0.80078,1 -0.80078,1.60156v34.69922c0,0.69922 0.30078,1.30078 0.89844,1.60156c2.10156,1.5 4.30078,3 6.40234,4.5l3,2.09766c0.30078,0.20313 0.69922,0.40234 1.09766,0.40234c0.40234,0 0.70313,-0.10156 1,-0.30078c4.30078,-2.60156 8.70313,-5.19922 13,-7.80078l10.60156,-6.30078c0.60156,-0.39844 1,-1 1,-1.69922z"
+                      ></path>
+                    </g>
+                  </g>
+                </svg>
+              </i>
+              <span class="search-engine-label">Bing</span>
+            </button>
+            <input
+              type="search"
+              id="search"
+              placeholder="搜索名称、域名、分类或标签"
+              aria-label="搜索"
+              autocomplete="off"
+              data-search-input
+            />
+            <span class="search-shortcut-hint" aria-hidden="true">Ctrl+K</span>
+            <div
+              class="search-engine-dropdown"
+              id="search-engine-dropdown"
+              role="menu"
+              aria-label="搜索引擎列表"
+            >
+              <button
+                class="search-engine-option active"
+                type="button"
+                role="menuitem"
+                data-engine="local"
+              >
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <span class="search-engine-option-label">本地搜索</span>
+              </button>
+              <button class="search-engine-option" type="button" role="menuitem" data-engine="google">
+                <span class="search-engine-option-label">Google</span>
+              </button>
+              <button class="search-engine-option" type="button" role="menuitem" data-engine="bing">
+                <span class="search-engine-option-label">Bing</span>
+              </button>
+              <button
+                class="search-engine-option"
+                type="button"
+                role="menuitem"
+                data-engine="duckduckgo"
+              >
+                <span class="search-engine-option-label">DuckDuckGo</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="page active">
+          <div class="page-template page-template-home">
+            <section class="welcome-section">
+              <div class="welcome-section-main">
+                <h2 data-editable="profile-title">{profileTitle}</h2>
+                {profileSubtitle && <h3 data-editable="profile-subtitle">{profileSubtitle}</h3>}
+              </div>
+            </section>
+
+            <div class="empty-content" data-empty-state hidden>没有找到匹配的网站</div>
+
+            {
+              config.categories.map((category) => (
+                <CategorySection
+                  category={category}
+                  iconMode={config.icons.mode}
+                  defaultIcon={config.icons.defaultIcon}
+                  iconTimeoutMs={config.icons.timeoutMs}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </main>
+
+      <button class="category-toggle" id="category-toggle" type="button" aria-label="展开/收起分类" data-category-toggle>
+        <i class="fas fa-angle-double-down" aria-hidden="true"></i>
+      </button>
+
+      <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle>
+        <i class="fas fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <script>
+      const input = document.querySelector<HTMLInputElement>("[data-search-input]");
+      const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-site-card]"));
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-category-section]")
+      );
+      const emptyState = document.querySelector<HTMLElement>("[data-empty-state]");
+      const themeToggle = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+      const themeToggleIcon = themeToggle?.querySelector("i");
+      const categoryToggle = document.querySelector<HTMLButtonElement>("[data-category-toggle]");
+      const searchBox = document.querySelector<HTMLElement>("[data-search-box]");
+      const searchEngineToggle = document.querySelector<HTMLButtonElement>(".search-engine-toggle");
+      const searchEngineIcon = document.querySelector<HTMLElement>(".search-engine-icon");
+      const searchEngineLabel = document.querySelector<HTMLElement>(".search-engine-label");
+      const searchEngineDropdown = document.querySelector<HTMLElement>(".search-engine-dropdown");
+      const searchEngineOptions = Array.from(
+        document.querySelectorAll<HTMLButtonElement>(".search-engine-option")
+      );
+      const categoryHeaders = Array.from(
+        document.querySelectorAll<HTMLElement>(".category-header[data-toggle='category']")
+      );
+      const faviconImages = Array.from(
+        document.querySelectorAll<HTMLImageElement>("[data-favicon-img]")
+      );
+      const root = document.documentElement;
+      const savedTheme = localStorage.getItem("nav-theme");
+      const searchEngines = {
+        local: {
+          name: "本地搜索",
+          label: "本地搜索",
+          icon: "fas fa-search",
+          iconSvg: "",
+          url: null
+        },
+        google: {
+          name: "Google搜索",
+          label: "Google",
+          icon: "fab fa-google",
+          iconSvg: "",
+          url: "https://www.google.com/search?q="
+        },
+        bing: {
+          name: "Bing搜索",
+          label: "Bing",
+          icon: "fab fa-microsoft",
+          iconSvg:
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" focusable="false"><g fill="#2877fb" fill-rule="nonzero"><g transform="scale(5.12,5.12)"><path d="M45,26.10156v-5.10156c0,-0.89844 -0.60156,-1.69922 -1.39844,-1.89844l-4.60156,-1.40234c-5.30078,-1.59766 -10.30078,-3 -15.60156,-4.69922h-0.09766c-0.80078,-0.19922 -1.60156,0.69922 -1.19922,1.5c1.89844,3.89844 3.89844,9.5 3.89844,9.5l6.69922,2.60156c-0.30078,0 -21.69922,11.39844 -21.69922,11.39844l9,-8v-23c0,-0.89844 -0.60156,-1.80078 -1.39844,-2c0,0 -4.90234,-1.89844 -8,-2.89844c-0.20312,-0.10156 -0.40234,-0.10156 -0.60156,-0.10156c-0.39844,0 -0.80078,0.10156 -1.19922,0.39844c-0.5,0.40234 -0.80078,1 -0.80078,1.60156v34.69922c0,0.69922 0.30078,1.30078 0.89844,1.60156c2.10156,1.5 4.30078,3 6.40234,4.5l3,2.09766c0.30078,0.20313 0.69922,0.40234 1.09766,0.40234c0.40234,0 0.70313,-0.10156 1,-0.30078c4.30078,-2.60156 8.70313,-5.19922 13,-7.80078l10.60156,-6.30078c0.60156,-0.39844 1,-1 1,-1.69922z"></path></g></g></svg>',
+          url: "https://www.bing.com/search?q="
+        },
+        duckduckgo: {
+          name: "DuckDuckGo搜索",
+          label: "duckgo",
+          icon: "fas fa-search",
+          iconSvg: "",
+          url: "https://duckduckgo.com/?q="
+        }
+      } as const;
+      type SearchEngineKey = keyof typeof searchEngines;
+      let currentSearchEngine: SearchEngineKey = "bing";
+
+      function prefersLight() {
+        return window.matchMedia("(prefers-color-scheme: light)").matches;
+      }
+
+      function setTheme(nextTheme: string) {
+        const isLight = nextTheme === "light" || (nextTheme === "system" && prefersLight());
+        root.classList.toggle("light-theme", isLight);
+        root.dataset.themeMode = nextTheme;
+        if (themeToggleIcon) {
+          themeToggleIcon.className = isLight ? "fas fa-sun" : "fas fa-moon";
+        }
+        localStorage.setItem("nav-theme", nextTheme);
+      }
+
+      if (savedTheme === "light" || savedTheme === "dark" || savedTheme === "system") {
+        setTheme(savedTheme);
+      } else if (root.dataset.themeMode === "system" && prefersLight()) {
+        root.classList.add("light-theme");
+      }
+      if (themeToggleIcon) {
+        themeToggleIcon.className = root.classList.contains("light-theme")
+          ? "fas fa-sun"
+          : "fas fa-moon";
+      }
+
+      themeToggle?.addEventListener("click", () => {
+        const current = root.dataset.themeMode || "dark";
+        const next = current === "dark" ? "light" : current === "light" ? "system" : "dark";
+        setTheme(next);
+      });
+
+      function updateSearchEngine(engine: SearchEngineKey) {
+        currentSearchEngine = engine;
+        const meta = searchEngines[engine];
+        searchEngineOptions.forEach((option) => {
+          option.classList.toggle("active", option.dataset.engine === engine);
+        });
+        if (searchEngineIcon) {
+          if (meta.iconSvg) {
+            searchEngineIcon.className = "search-engine-icon search-engine-icon-svg";
+            searchEngineIcon.innerHTML = meta.iconSvg;
+          } else {
+            searchEngineIcon.className = `search-engine-icon ${meta.icon}`;
+            searchEngineIcon.innerHTML = "";
+          }
+        }
+        if (searchEngineLabel) searchEngineLabel.textContent = meta.label;
+        searchEngineToggle?.setAttribute("aria-label", `当前搜索引擎：${meta.name}，点击切换`);
+        localStorage.setItem("searchEngine", engine);
+      }
+
+      function closeSearchEngineDropdown() {
+        searchEngineDropdown?.classList.remove("active");
+        searchBox?.classList.remove("dropdown-open");
+        searchEngineToggle?.setAttribute("aria-expanded", "false");
+      }
+
+      searchEngineToggle?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const next = !searchEngineDropdown?.classList.contains("active");
+        searchEngineDropdown?.classList.toggle("active", Boolean(next));
+        searchBox?.classList.toggle("dropdown-open", Boolean(next));
+        searchEngineToggle.setAttribute("aria-expanded", String(Boolean(next)));
+      });
+
+      searchEngineOptions.forEach((option) => {
+        option.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const engine = option.dataset.engine;
+          if (engine && engine in searchEngines) {
+            updateSearchEngine(engine as SearchEngineKey);
+            closeSearchEngineDropdown();
+            if (input?.value) updateSearch();
+          }
+        });
+      });
+
+      document.addEventListener("click", closeSearchEngineDropdown);
+
+      const savedSearchEngine = localStorage.getItem("searchEngine");
+      if (savedSearchEngine && savedSearchEngine in searchEngines) {
+        updateSearchEngine(savedSearchEngine as SearchEngineKey);
+      } else {
+        updateSearchEngine("bing");
+      }
+
+      function showIconFallback(image: HTMLImageElement) {
+        image.classList.add("error");
+        image.previousElementSibling?.classList.add("hidden");
+        image.nextElementSibling?.classList.add("visible");
+      }
+
+      function showLoadedIcon(image: HTMLImageElement) {
+        image.classList.add("loaded");
+        image.previousElementSibling?.classList.add("hidden");
+      }
+
+      faviconImages.forEach((image) => {
+        const sources = JSON.parse(image.dataset.faviconSrcs || "[]") as string[];
+        const timeoutMs = Number(image.dataset.iconTimeoutMs || "2500");
+        let sourceIndex = 0;
+        let timeoutId = 0;
+
+        function tryNextSource() {
+          sourceIndex += 1;
+          if (sourceIndex >= sources.length) {
+            showIconFallback(image);
+            return;
+          }
+
+          window.clearTimeout(timeoutId);
+          image.src = sources[sourceIndex];
+          timeoutId = window.setTimeout(tryNextSource, timeoutMs);
+        }
+
+        timeoutId = window.setTimeout(tryNextSource, timeoutMs);
+
+        image.addEventListener("load", () => {
+          window.clearTimeout(timeoutId);
+          if (image.naturalWidth > 0) {
+            showLoadedIcon(image);
+          } else {
+            tryNextSource();
+          }
+        });
+
+        image.addEventListener("error", tryNextSource);
+
+        if (image.complete) {
+          window.clearTimeout(timeoutId);
+          if (image.naturalWidth > 0) {
+            showLoadedIcon(image);
+          } else {
+            tryNextSource();
+          }
+        }
+      });
+
+      categoryHeaders.forEach((header) => {
+        header.addEventListener("click", () => {
+          header.closest(".category")?.classList.toggle("collapsed");
+        });
+      });
+
+      categoryToggle?.addEventListener("click", () => {
+        const categories = Array.from(document.querySelectorAll<HTMLElement>(".category"));
+        const shouldCollapse = categories.some((category) => !category.classList.contains("collapsed"));
+        categories.forEach((category) => category.classList.toggle("collapsed", shouldCollapse));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+          event.preventDefault();
+          input?.focus();
+        }
+      });
+
+      function updateSearch() {
+        const query = input?.value.trim().toLowerCase() || "";
+        let visibleCount = 0;
+
+        if (currentSearchEngine !== "local") {
+          cards.forEach((card) => {
+            card.hidden = false;
+          });
+          sections.forEach((section) => {
+            section.hidden = false;
+          });
+          searchBox?.classList.remove("has-results", "no-results");
+          if (emptyState) emptyState.hidden = true;
+          return;
+        }
+
+        cards.forEach((card) => {
+          const text = card.getAttribute("data-filter") || "";
+          const visible = text.includes(query);
+          card.hidden = !visible;
+          if (visible) visibleCount += 1;
+        });
+
+        sections.forEach((section) => {
+          const visibleCards = section.querySelectorAll("[data-site-card]:not([hidden])");
+          section.hidden = visibleCards.length === 0;
+        });
+
+        searchBox?.classList.toggle("has-results", visibleCount > 0);
+        searchBox?.classList.toggle("no-results", visibleCount === 0);
+        if (emptyState) emptyState.hidden = visibleCount !== 0;
+      }
+
+      input?.addEventListener("input", updateSearch);
+      input?.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        const query = input.value.trim();
+        if (!query) return;
+        const engine = searchEngines[currentSearchEngine];
+        if (currentSearchEngine === "local") {
+          updateSearch();
+        } else if (engine.url) {
+          window.open(`${engine.url}${encodeURIComponent(query)}`, "_blank", "noopener");
+        }
+      });
+      document.body.classList.remove("loading");
+      document.body.classList.add("loaded");
+    </script>
+  </body>
+</html>

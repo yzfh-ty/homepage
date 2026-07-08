@@ -1,0 +1,21 @@
+site:
+  title: My Navigation
+  description: Personal Navigation Station
+  owner: Your Name
+  theme: dark
+
+profile:
+  title: 自定义首页标题
+  subtitle: 自定义副标题
+
+fonts:
+  source: css
+  cssUrl: https://fontsapi.zeoseven.com/292/main/result.css
+  preload: false
+  family: LXGW WenKai
+  weight: normal
+
+icons:
+  mode: favicon
+  defaultIcon: fas fa-link
+  timeoutMs: 2500
