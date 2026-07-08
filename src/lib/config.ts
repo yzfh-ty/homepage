@@ -1,5 +1,5 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { load } from "js-yaml";
 import { z } from "zod";
 
@@ -67,16 +67,27 @@ export type SiteItem = z.infer<typeof siteItemSchema>;
 export type Category = z.infer<typeof categorySchema>;
 export type IconMode = z.infer<typeof iconsSchema>["mode"];
 
+const defaultSettingsPath = "src/defaults/settings.yml";
+const defaultNavigationPath = "src/defaults/navigation.yml";
+
 function loadYamlFile(path: string): unknown {
   const file = readFileSync(path, "utf8");
   return load(file);
 }
 
+function ensureYamlFile(path: string, fallbackPath: string): string {
+  if (existsSync(path)) return path;
+
+  mkdirSync(dirname(path), { recursive: true });
+  copyFileSync(fallbackPath, path);
+  return path;
+}
+
 export function loadNavConfig(): NavConfig {
   const pageConfigPath = resolve(process.env.NAV_NAVIGATION_CONFIG ?? "config/navigation.yml");
   const siteConfigPath = resolve(process.env.NAV_SETTINGS_CONFIG ?? "config/settings.yml");
-  const pageRaw = loadYamlFile(pageConfigPath);
-  const siteRaw = loadYamlFile(siteConfigPath);
+  const pageRaw = loadYamlFile(ensureYamlFile(pageConfigPath, resolve(defaultNavigationPath)));
+  const siteRaw = loadYamlFile(ensureYamlFile(siteConfigPath, resolve(defaultSettingsPath)));
   const siteConfig = siteConfigSchema.parse(siteRaw);
   const pageConfig = pageConfigSchema.parse(pageRaw);
 

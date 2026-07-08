@@ -1,7 +1,7 @@
 services:
   nav:
     container_name: single-page-nav
-    image: ${NAV_IMAGE:-single-page-nav:latest}
+    image: ${NAV_IMAGE:-ghcr.io/yzfh-ty/homepage:latest}
     environment:
       NAV_NAVIGATION_CONFIG: /app/config/navigation.yml
       NAV_SETTINGS_CONFIG: /app/config/settings.yml

@@ -1,0 +1,49 @@
+categories:
+  - name: 开发资源
+    description: 公共开发工具与文档
+    icon: fas fa-star
+    sites:
+      - name: GitHub
+        url: https://github.com
+        description: 代码托管平台
+        icon: fab fa-github
+        tags:
+          - code
+          - git
+      - name: MDN Web Docs
+        url: https://developer.mozilla.org
+        description: Web 技术文档
+        icon: fab fa-firefox-browser
+        tags:
+          - docs
+          - web
+      - name: Stack Overflow
+        url: https://stackoverflow.com
+        description: 开发者问答社区
+        icon: fab fa-stack-overflow
+        tags:
+          - qna
+          - code
+
+  - name: 常用网站
+    description: 公共搜索与信息服务
+    icon: fas fa-globe
+    sites:
+      - name: Wikipedia
+        url: https://www.wikipedia.org
+        description: 自由百科全书
+        icon: fab fa-wikipedia-w
+        tags:
+          - wiki
+      - name: Google
+        url: https://www.google.com
+        description: 搜索引擎
+        icon: fab fa-google
+        tags:
+          - search
+      - name: DuckDuckGo
+        url: https://duckduckgo.com
+        description: 注重隐私的搜索引擎
+        icon: fas fa-search
+        tags:
+          - search
